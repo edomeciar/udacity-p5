@@ -18,15 +18,6 @@ var MapModel = function(){
 		map = new google.maps.Map(document.getElementById('map-canvas'), defaultValues);
 		ko.applyBindings(new PoisViewModel());
 
-		/*
-		panorama = new google.maps.StreetViewPanorama(
-      		document.getElementById('street-view'),
-      		{
-        		position: {lat: 37.869260, lng: -122.254811},
-        		pov: {heading: 165, pitch: 0},
-        		zoom: 1
-      		});
-      	*/
 
 	}
 
@@ -35,6 +26,7 @@ var MapModel = function(){
 		self.label = labels[labelIndex++ % labels.length]
 		self.name = pName;
 		self.location = pLocation;
+		self.visible = ko.observable(true);
 		self.mapMarker = new google.maps.Marker({
 			position: new google.maps.LatLng(self.location.lat,self.location.lng),
 			label: self.label,
@@ -46,6 +38,7 @@ var MapModel = function(){
 		var self = this;
 
 		self.selected = ko.observable();
+		self.searchText = ko.observable();
 
 		self.defPois=[
 			{
@@ -67,6 +60,18 @@ var MapModel = function(){
 		var mappedPois = $.map(self.defPois, function(obj){ return new poi(obj.name, obj.location);});
 
 		self.pois = ko.observableArray(mappedPois);
+
+		self.searchPois = function(){
+
+			$.each( self.pois(), function( key, value ) {
+				if(value.name.toUpperCase().search(self.searchText().toUpperCase()) > -1){
+					console.log( key + ": " + value.name );
+				}
+
+			});
+			//testStr.contains("test")
+
+		}
 	}
 
 	google.maps.event.addDomListener(window, 'load', initialize);

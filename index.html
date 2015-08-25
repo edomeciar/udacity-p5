@@ -26,6 +26,11 @@
                 <div id="map-canvas"></div>
             </div>
             <div class="col-md-4">
+                <fomr>
+                    <label for="searchInput">Search: </label>
+                    <input type="text" name="searchInput" id="searchInputId" placeholder="What are you looking for?" data-bind="value: searchText">
+                    <button type="submit" data-bind="click: searchPois">Search</button>
+                </form>
                 <div data-bind="foreach: pois">
                     <div>
                         <a href="#" data-bind="text: name"></a>
@@ -34,7 +39,6 @@
                         Lng:<span data-bind="text: location.lng"></span>
                     </div
                 </div>
-                <div id="street-view"></div>
             </div>
         </div>
     </div>

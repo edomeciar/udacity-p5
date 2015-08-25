@@ -1,4 +1,8 @@
-#map {
-	width:100%;
-	height:500px;
+
+
+
+#map-canvas {
+	display: block;
+   width: 100%;
+   height: 400px;
 }

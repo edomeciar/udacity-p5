@@ -65,11 +65,15 @@ var MapModel = function(){
 
 			$.each( self.pois(), function( key, value ) {
 				if(value.name.toUpperCase().search(self.searchText().toUpperCase()) > -1){
+					value.visible(true);
+					value.mapMarker.setVisible(true);
 					console.log( key + ": " + value.name );
+				}else{
+					value.mapMarker.setVisible(false);
+					value.visible(false);
 				}
 
 			});
-			//testStr.contains("test")
 
 		}
 	}

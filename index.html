@@ -32,7 +32,7 @@
                     <button type="submit" data-bind="click: searchPois">Search</button>
                 </form>
                 <div data-bind="foreach: pois">
-                    <div>
+                    <div data-bind="visible: visible">
                         <a href="#" data-bind="text: name"></a>
                         <span>Label: </span><strong><span data-bind="text: label"></span></strong>
                         Lat:<span data-bind="text: location.lat"></span>

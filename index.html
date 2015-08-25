@@ -15,10 +15,10 @@
 
 </head>
 <body>
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <h1 data-bind="text: projectTitle">/h1>
+                <h1>Beauty of Slovakia</h1>
             </div>
         </div>
         <div class="row">
@@ -26,7 +26,11 @@
                 <div id="map"></div>
             </div>
             <div class="col-md-4">
-
+                <div data-bind="foreach: pois">
+                        <a href="#" data-bind="text: name"></a>
+                        <p>detail</p>
+                        <span data-bind="text: location.lat"></span>
+                </div>
             </div>
         </div>
     </div>

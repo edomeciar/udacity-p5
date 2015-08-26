@@ -5,7 +5,7 @@
     <meta name="author" content="Eduard Meciar">
     <title>Map Project 5</title>
 
-    <link real="stylesheet" hreaf="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.css">
 
     <script src="js/libs/knockout-3.3.0.js"></script>
@@ -22,40 +22,51 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-7">
                 <div id="map-canvas"></div>
             </div>
-            <div class="col-md-4">
-                <form>
-                    <label for="searchInput">Search: </label>
-                    <input type="text" name="searchInput" id="searchInputId" placeholder="What are you looking for?" data-bind="value: searchText">
-                    <button type="submit" data-bind="click: searchPois">Search</button>
-                </form>
-                <div data-bind="foreach: pois">
-                    <div data-bind="visible: visible">
-                        <a href="#" data-bind="text: name, click: $root.selectPoi"></a>
-                        <span>Label: </span><strong><span data-bind="text: label"></span></strong>
-
-                    </div
-                </div>
-            </div>
-            <div class="row">
+            <div class="col-md-5">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form class="form-inline">
+                            <div class="form-group">
+                                <label for="searchInput">Search: </label>
+                                <input class="form-control" type="text" name="searchInput" id="searchInputId" placeholder="Search POIs" data-bind="value: searchText">
+                            </div>
+                            <button type="submit" class="btn btn-default" data-bind="click: searchPois">Search</button>
+                        </form>
+                    </div>
+                    <div class="col-md-12">
+                        <ul data-bind="foreach: pois">
+                            <li data-bind="visible: visible" class="text-left">
+                                <span>Label: </span><strong><span data-bind="text: label"></span></strong>
+                                <a href="#" data-bind="text: name, click: $root.selectPoi"></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="row">
                 <div class="col-md-12">
                     <div data-bind="with: selected">
-                        <h1 data-bind="text: name"></h1>
+                        <h2 data-bind="text: name"></h2>
                         Lat:<span data-bind="text: location.lat"></span>
                         Lng:<span data-bind="text: location.lng"></span>
                         <div>Wikipedia search results:</div>
                         <div data-bind="foreach: articleList">
-                            <div>
-                                <h2 data-bind="text: title"></h2>
+                            <blockquote>
+                                <h4 data-bind="text: title"></h4>
                                 <p data-bind="text: article"></p>
-                                <a target="_blank" data-bind="attr: {href: link}">link</a>
-                            </div>
+                                <footer>
+                                    <a target="_blank" data-bind="attr: {href: link}">link</a>
+                                </footer>
+                            </blockquote>
                         <div>
                     </div>
                 </div>
             </div>
+                </div>
+            </div>
+        </div>
+
         </div>
     </div>
 </body>

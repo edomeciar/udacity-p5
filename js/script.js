@@ -20,14 +20,20 @@ var MapModel = function(){
 		init variables for generating markers for pois on the map
 		*/
 		labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-		labelIndex = 0
+		labelIndex = 0,
+		/*
+		variable to fold object PoisViewModel. With this implementation, I was able to access function selectPoi from outsite.
+		And use this function also when I am creating listener for marker.
+		*/
+		pvm
 
 	/*
 	create map and apply binding for list of POIs
 	*/
 	function initialize(){
 		map = new google.maps.Map(document.getElementById('map-canvas'), defaultValues);
-		ko.applyBindings(new PoisViewModel());
+		pvm = new PoisViewModel();
+		ko.applyBindings(pvm);
 
 
 	}
@@ -46,7 +52,14 @@ var MapModel = function(){
 			position: new google.maps.LatLng(self.location.lat,self.location.lng),
 			label: self.label,
 			map: map
-		})
+		});
+		self.markerIcon = self.mapMarker.getIcon();
+		/*
+		Add listener for marker and call function to load wiki data.
+		*/
+		google.maps.event.addListener(self.mapMarker, 'click', function() {
+			pvm.selectPoi(self);
+		});
 	}
 
 	function PoisViewModel(){
@@ -121,6 +134,7 @@ var MapModel = function(){
 			set text from input field to variable and check if someting is in the field.
 			If not, set "" into variable. This code was written, because when input field was empty, code sText.toUpperCase(); was producing error.
 			*/
+			self.resetMarkers();
 			var sText = self.searchText();
 			if(sText != undefined) {
 				sText = sText.toUpperCase();
@@ -138,6 +152,14 @@ var MapModel = function(){
 
 			});
 		}
+
+		self.resetMarkers = function(){
+			$.each(self.pois(), function( key, val ) {
+						val.mapMarker.set('labelContent', val.label);
+		                val.mapMarker.setIcon(val.markerIcon);
+		    });
+		}
+
 		/*
 		function is called from GUI, when user click on the poi in the list.
 		*/
@@ -155,6 +177,9 @@ var MapModel = function(){
 			remove article list of selected POI. Can be populated from previovse action.
 			*/
 			self.selected().articleList.removeAll()
+			self.resetMarkers();
+			self.selected().mapMarker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png');
+
 			/*
 			build search url fro wikipedia and call ajax request.
 			*/

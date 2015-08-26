@@ -27,6 +27,7 @@ var MapModel = function(){
 		self.name = pName;
 		self.location = pLocation;
 		self.visible = ko.observable(true);
+		self.articleList = ko.observableArray();
 		self.mapMarker = new google.maps.Marker({
 			position: new google.maps.LatLng(self.location.lat,self.location.lng),
 			label: self.label,
@@ -42,19 +43,34 @@ var MapModel = function(){
 
 		self.defPois=[
 			{
-				name:"Lomnický peak",
+				name:"Lomnický stit",
 				location:{
 					lat:49.195272,
 					lng:20.213147
 				}
 			},
 			{
-				name:"Bojnice Castle",
+				name:"Chopok",
 				location:{
-					lat:48.780281,
-					lng:18.577452
+					lat:48.943402,
+					lng:19.590036
+				}
+			},
+			{
+				name:"Banikov",
+				location:{
+					lat:49.198319,
+					lng:19.711955
+				}
+			},
+			{
+				name:"Zaruby",
+				location:{
+					lat:48.521995,
+					lng:17.384371
 				}
 			}
+
 		];
 
 		var mappedPois = $.map(self.defPois, function(obj){ return new poi(obj.name, obj.location);});
@@ -74,7 +90,29 @@ var MapModel = function(){
 				}
 
 			});
+		}
 
+		self.selectPoi = function(pPoi){
+			self.selected = pPoi;
+			self.selected.articleList.removeAll()
+			var remoteUrlWithOrigin = "https://en.wikipedia.org/w/api.php?action=opensearch&search="+pPoi.name+"&format=json&callback=wikiCallback"
+			$.ajax( {
+		        url: remoteUrlWithOrigin,
+		        dataType: 'jsonp',
+		        type: 'POST',
+		        headers: { 'Api-User-Agent': 'Example/1.0' },
+		        success: function(data) {
+		            var wikiArticleTitles = data[1]
+		            $.each(wikiArticleTitles, function( key, val ) {
+		                self.selected.articleList.push({
+		                	title: val,
+		                	article: data[2][key],
+		                	link: data[3][key]
+		                });
+		                console.log(val);
+		            });
+		        }
+		    } );
 		}
 	}
 

@@ -18,11 +18,11 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h1>Beauty of Slovakia</h1>
+                <h1>Mountains of Slovakia</h1>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-8f">
+            <div class="col-md-8">
                 <div id="map-canvas"></div>
             </div>
             <div class="col-md-4">
@@ -33,11 +33,22 @@
                 </form>
                 <div data-bind="foreach: pois">
                     <div data-bind="visible: visible">
-                        <a href="#" data-bind="text: name"></a>
+                        <a href="#" data-bind="text: name, click: $parent.selectPoi"></a>
                         <span>Label: </span><strong><span data-bind="text: label"></span></strong>
+
+                    </div
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div data-bind="with: selected">
+                        <h1 data-bind="text: name"></h1>
                         Lat:<span data-bind="text: location.lat"></span>
                         Lng:<span data-bind="text: location.lng"></span>
-                    </div
+                        <div data-bind="foreach: selected.articleList">
+                            <span data-bind="text: title"></span>
+                        <div>
+                    </div>
                 </div>
             </div>
         </div>

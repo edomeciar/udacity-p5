@@ -31,7 +31,9 @@ var MapModel = function(){
 		self.mapMarker = new google.maps.Marker({
 			position: new google.maps.LatLng(self.location.lat,self.location.lng),
 			label: self.label,
+			mapTypeId: google.maps.MapTypeId.SATELLITE,
 			map: map
+
 		})
 	}
 
@@ -47,6 +49,13 @@ var MapModel = function(){
 				location:{
 					lat:49.195272,
 					lng:20.213147
+				}
+			},
+			{
+				name:"Gerlachovský štít",
+				location:{
+					lat:49.164293,
+					lng:20.133684
 				}
 			},
 			{
@@ -93,8 +102,8 @@ var MapModel = function(){
 		}
 
 		self.selectPoi = function(pPoi){
-			self.selected = pPoi;
-			self.selected.articleList.removeAll()
+			self.selected(pPoi);
+			//self.selected.articleList.removeAll()
 			var remoteUrlWithOrigin = "https://en.wikipedia.org/w/api.php?action=opensearch&search="+pPoi.name+"&format=json&callback=wikiCallback"
 			$.ajax( {
 		        url: remoteUrlWithOrigin,
@@ -102,14 +111,13 @@ var MapModel = function(){
 		        type: 'POST',
 		        headers: { 'Api-User-Agent': 'Example/1.0' },
 		        success: function(data) {
-		            var wikiArticleTitles = data[1]
+		            var wikiArticleTitles = data[1];
 		            $.each(wikiArticleTitles, function( key, val ) {
-		                self.selected.articleList.push({
+		                self.selected().articleList.push({
 		                	title: val,
 		                	article: data[2][key],
 		                	link: data[3][key]
 		                });
-		                console.log(val);
 		            });
 		        }
 		    } );

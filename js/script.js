@@ -2,12 +2,13 @@ $(function(){
 	var mapModel = new MapModel();
 });
 
-/*model*/
+/*main cladd with all logic*/
 var MapModel = function(){
 	"use strict";
+	/*default values for map*/
 	var defaultValues={
-			center: {lat: 48.549429090642946, lng: 19.65522705078128},
-    		zoom: 8
+			center: {lat: 49.12969734863698, lng: 19.87220703125003},
+    		zoom: 9
 		},
 		map,
 		panorama,
@@ -73,10 +74,17 @@ var MapModel = function(){
 				}
 			},
 			{
-				name:"Zaruby",
+				name:"Baranec",
 				location:{
-					lat:48.521995,
-					lng:17.384371
+					lat:49.173488,
+					lng:19.742822
+				}
+			},
+			{
+				name:"Kralova hola",
+				location:{
+					lat:48.882869,
+					lng:20.139703
 				}
 			}
 
@@ -87,12 +95,18 @@ var MapModel = function(){
 		self.pois = ko.observableArray(mappedPois);
 
 		self.searchPois = function(){
-
+			map.setCenter(new google.maps.LatLng(defaultValues.center.lat,defaultValues.center.lng));
+			map.setZoom(defaultValues.zoom);
+			var sText = self.searchText();
+			if(sText != undefined) {
+				sText = sText.toUpperCase();
+			}else{
+				sText = "";
+			}
 			$.each( self.pois(), function( key, value ) {
-				if(value.name.toUpperCase().search(self.searchText().toUpperCase()) > -1){
+				if(value.name.toUpperCase().search(sText) > -1){
 					value.visible(true);
 					value.mapMarker.setVisible(true);
-					console.log( key + ": " + value.name );
 				}else{
 					value.mapMarker.setVisible(false);
 					value.visible(false);
@@ -103,9 +117,11 @@ var MapModel = function(){
 
 		self.selectPoi = function(pPoi){
 			self.selected(pPoi);
-			//self.selected.articleList.removeAll()
+			map.setCenter(new google.maps.LatLng(pPoi.location.lat,pPoi.location.lng));
+			map.setZoom(12);
+			self.selected().articleList.removeAll()
 			var remoteUrlWithOrigin = "https://en.wikipedia.org/w/api.php?action=opensearch&search="+pPoi.name+"&format=json&callback=wikiCallback"
-			$.ajax( {
+			$.ajax({
 		        url: remoteUrlWithOrigin,
 		        dataType: 'jsonp',
 		        type: 'POST',
@@ -119,8 +135,22 @@ var MapModel = function(){
 		                	link: data[3][key]
 		                });
 		            });
+		            if(wikiArticleTitles.length == 0){
+		            	self.selected().articleList.push({
+		                	title: "No articles found about: "+pPoi.name,
+		                	article: "You can try custom search on Wikipedia",
+		                	link: "https://en.wikipedia.org/wiki/Main_Page"
+		                });
+		            }
+		        },
+		        fail: function(jqXHR,textStatus,errorThrown){
+		        	self.selected().articleList.push({
+		                	title: "Error durring search for: "+pPoi.name,
+		                	article: errorThrown + ": " + textStatus,
+		                	link: "https://en.wikipedia.org/wiki/Main_Page"
+		                });
 		        }
-		    } );
+		    });
 		}
 	}
 

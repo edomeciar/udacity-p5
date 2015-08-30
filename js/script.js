@@ -25,7 +25,11 @@ var MapModel = function(){
 		variable to fold object PoisViewModel. With this implementation, I was able to access function selectPoi from outsite.
 		And use this function also when I am creating listener for marker.
 		*/
-		pvm
+		pvm,
+		/*
+		infoWindow for map markers
+		*/
+		infoWindow = new google.maps.InfoWindow();
 
 	/*
 	create map and apply binding for list of POIs
@@ -58,6 +62,10 @@ var MapModel = function(){
 		Add listener for marker and call function to load wiki data.
 		*/
 		google.maps.event.addListener(self.mapMarker, 'click', function() {
+			var infoWinContent = "<p><strong>"+self.name+"</strong></p>"+
+				"<p>Lat: "+self.location.lat+" Lng: "+self.location.lng+"</p>";
+			infoWindow.setContent(infoWinContent);
+			infoWindow.open(map,self.mapMarker);
 			pvm.selectPoi(self);
 		});
 	}
